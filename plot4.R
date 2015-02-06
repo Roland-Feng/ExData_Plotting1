@@ -1,0 +1,30 @@
+data<-read.table("household_power_consumption.txt",header=TRUE,sep=";",na.string="?")
+##dataInUse<-split(data,data$Date)
+dataInUse<-subset(data,Date=="1/2/2007")
+dat<-subset(data,Date=="2/2/2007")
+dataInUse<-rbind(dataInUse,dat)
+
+dataInUse$Date<-as.Date(dataInUse$Date, format="%d/%m/%Y")
+datetime<-paste(as.Date(dataInUse$Date),dataInUse$Time)
+DT<-as.POSIXct(datetime)
+sub1 <- as.numeric(dataInUse$Sub_metering_1) 
+sub2 <- as.numeric(dataInUse$Sub_metering_2) 
+sub3 <- as.numeric(dataInUse$Sub_metering_3)  
+
+y1 <- as.numeric(dataInUse$Global_active_power)
+y2 <- as.numeric(dataInUse$Voltage)
+y4 <- as.numeric(dataInUse$Global_reactive_power)
+
+par(mfrow=c(2,2))
+with(dataInUse,{plot(DT,y1,ylab="Gobal Active Power",xlab="",type="l")
+                plot(DT,y4,ylab="Voltage",xlab="datetime",type="l")
+{plot(DT,sub1,type="l",ylab="Energy Sub Metering",xlab="")
+ lines(DT,sub2,type="l",col="red",xlab="")
+ lines(DT,sub3,type="l",col="blue",xlab="")
+ legend("topright",lty=1,col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+}
+plot(DT,y4,ylab="Gobal_reactive_power",xlab="",type="l")
+})
+
+dev.copy(png,file="plot4.png")
+dev.off()

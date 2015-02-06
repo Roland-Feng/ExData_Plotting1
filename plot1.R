@@ -1,0 +1,8 @@
+data<-read.table("household_power_consumption.txt",header=TRUE,sep=";")
+##dataInUse<-split(data,data$Date)
+dataInUse<-subset(data,Date=="1/2/2007")
+dat<-subset(data,Date=="2/2/2007")
+dataInUse<-rbind(dataInUse,dat)
+hist(as.numeric(dataInUse$Global_active_power)/500, col="red", xlab="Global Active Power (kilowatts)",main="Global Active Power",Ylim=1200)
+dev.copy(png,file="plot1.png",width=480,height=480)
+dev.off()

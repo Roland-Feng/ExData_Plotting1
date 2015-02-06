@@ -1,0 +1,21 @@
+data<-read.table("household_power_consumption.txt",header=TRUE,sep=";",na.string="?")
+##dataInUse<-split(data,data$Date)
+dataInUse<-subset(data,Date=="1/2/2007")
+dat<-subset(data,Date=="2/2/2007")
+dataInUse<-rbind(dataInUse,dat)
+
+dataInUse$Date<-as.Date(dataInUse$Date, format="%d/%m/%Y")
+datetime<-paste(as.Date(dataInUse$Date),dataInUse$Time)
+DT<-as.POSIXct(datetime)
+sub1 <- as.numeric(dataInUse$Sub_metering_1) 
+sub2 <- as.numeric(dataInUse$Sub_metering_2) 
+sub3 <- as.numeric(dataInUse$Sub_metering_3)  
+
+
+with(dataInUse,{plot(DT,sub1,type="l",ylab="Energy Sub Metering",xlab="")
+                lines(DT,sub2,type="l",col="red",xlab="")
+                lines(DT,sub3,type="l",col="blue",xlab="")
+})
+legend("topright",lty=1,lwd=1,col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+dev.copy(png,file="plot3.png",width=600,height=480)
+dev.off()
